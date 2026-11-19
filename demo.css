@@ -1,0 +1,20 @@
+/* Rules for the sample viewer and request reference. The workbench uses styles.css. */
+#demo, #metrics, #api { scroll-margin-top: 20px; }
+#result-empty .text-button { padding: 0; }
+#request-preview h4 { margin: 12px 0 3px; }
+#request-preview .table-wrap { margin-top: 12px; }
+#request-preview td { white-space: normal; overflow-wrap: anywhere; }
+#request-preview a { margin-left: 14px; }
+#sample-detail { margin-top: 12px; }
+.frame-detail { margin-top: 9px; }
+.frame-detail summary { width: fit-content; color: var(--blue); font-size: .875rem; }
+.sample-views { display: flex; gap: 16px; margin: 8px 0 5px; }
+.sample-views [aria-pressed="true"] { font-weight: 700; text-decoration: underline; text-underline-offset: .22em; }
+.sample-frames { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.sample-frames figure { margin: 0; }
+.sample-frames img { display: block; width: 100%; height: auto; border-radius: 4px; }
+.sample-frames figcaption { color: var(--muted); margin-top: 3px; font-size: .8rem; }
+.api-reference { margin-top: 20px; }
+.routes { margin: 12px 0 0; }
+.routes dt { color: var(--ink); margin-top: 10px; }
+.routes dd { margin: 3px 0 0; }
