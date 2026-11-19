@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f8fa">
+  <title>三视角视频评测 · 机器人视觉评测</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./catalog.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">跳到主要内容</a>
+  <header class="mast">
+    <div class="wrap mast-inner">
+      <a class="brand" href="#main"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>机器人视觉评测</a>
+      <nav aria-label="页面导航"><a href="#demo">评测样例</a><a href="#metrics">指标目录</a><a href="#api">接口说明</a></nav>
+    </div>
+  </header>
+  <main class="wrap" id="main">
+    <div class="intro">
+      <h1>三视角视频评测</h1>
+      <p>对同一次机器人操作的头部、左夹爪和右夹爪视频，逐帧比较画质压缩前后的差异。</p>
+    </div>
+    <section id="demo" aria-labelledby="demo-title">
+      <div class="section-head"><h2 id="demo-title">评测样例</h2><span class="meta">合成视频 · 每视角 8 帧</span></div>
+      <div class="demo-grid">
+        <div class="panel previews">
+          <div class="switch" role="group" aria-label="查看视角">
+            <button type="button" data-view="head" aria-pressed="true">头部</button>
+            <button type="button" data-view="left_wrist" aria-pressed="false">左夹爪</button>
+            <button type="button" data-view="right_wrist" aria-pressed="false">右夹爪</button>
+          </div>
+          <div class="pair">
+            <figure><div class="frame"><img id="clean-preview" src="./samples/head_clean.png" width="256" height="256" alt="头部视角的原片首帧，合成测试图"></div><figcaption><strong>原始视频</strong><span>MP4</span></figcaption></figure>
+            <figure><div class="frame"><img id="comp-preview" src="./samples/head_comp.png" width="256" height="256" alt="头部视角的压缩片首帧，合成测试图"></div><figcaption><strong>压缩视频</strong><span>MOV</span></figcaption></figure>
+          </div>
+          <p class="muted preview-note">画面展示同一视角的第 1 帧。右侧分数汇总该视角全部 8 对帧。</p>
+        </div>
+        <div class="score" aria-live="polite" aria-atomic="true">
+          <div class="score-top"><h3>MS-SSIM</h3><span>样例实测</span></div>
+          <div class="main-score"><p id="mean-label">头部 · 逐帧均值</p><strong id="mean">1.000000</strong></div>
+          <dl class="score-pair">
+            <div><dt>中位数</dt><dd id="median">1.000000</dd></div>
+            <div><dt>第 95 百分位</dt><dd id="p95">1.000000</dd></div>
+          </dl>
+          <div class="macro"><span>三视角等权平均</span><strong id="macro">0.987899</strong></div>
+        </div>
+      </div>
+      <p class="demo-note">此公开页面展示评测服务已计算的样例。运行自己的视频任务时，由计算服务接收六个文件。<a href="#api">查看提交接口 →</a></p>
+    </section>
+    <section id="metrics" aria-labelledby="metrics-title">
+      <div class="section-head"><h2 id="metrics-title">指标目录</h2><span class="meta" id="catalog-status">14 项指标 · 1 项已实现</span></div>
+      <p class="section-intro">展开指标，查看衡量对象、输入要求和接口标识。</p>
+      <div id="groups"></div>
+      <noscript><p>请启用 JavaScript，查看全部指标及其输入要求，并切换样例视角。</p></noscript>
+    </section>
+    <section id="api" aria-labelledby="api-title">
+      <div class="section-head"><h2 id="api-title">计算服务接口</h2><span class="meta">HTTP API</span></div>
+      <p class="section-intro">以下路径相对于运行中的计算服务。GitHub Pages 仅提供静态展示。</p>
+      <div class="panel api-table">
+        <details><summary><code class="verb">GET</code><code class="path">/api/metrics</code><span class="api-name">获取指标目录</span></summary><div class="api-body">返回 <code>metrics</code> 数组，每项包含指标标识、说明、输入要求和可计算状态。</div></details>
+        <details><summary><code class="verb">GET</code><code class="path">/api/metrics/{metric_id}</code><span class="api-name">读取单项定义</span></summary><div class="api-body">用目录中的标识替换 <code>{metric_id}</code>。例如，查询 <code>/api/metrics/caia_loss</code> 可以读取 CAIA-Loss 的定义和所需材料。</div></details>
+        <details open><summary><code class="verb post">POST</code><code class="path">/api/jobs</code><span class="api-name">提交三组视频</span></summary>
+          <div class="api-body"><p>使用 <code>multipart/form-data</code>，按下列字段提交六个 MP4 或 MOV 文件。默认计算 MS-SSIM。每对视频的帧数、分辨率、显示旋转角及相对时间戳须匹配，画面短边至少 161 像素。</p>
+            <div class="field-table"><table><caption class="sr-only">视频上传表单字段</caption><thead><tr><th scope="col">视角</th><th scope="col">原片字段</th><th scope="col">压缩片字段</th></tr></thead>
+              <tbody><tr><th scope="row">头部</th><td><code>head_clean</code></td><td><code>head_comp</code></td></tr>
+                <tr><th scope="row">左夹爪</th><td><code>left_wrist_clean</code></td><td><code>left_wrist_comp</code></td></tr>
+                <tr><th scope="row">右夹爪</th><td><code>right_wrist_clean</code></td><td><code>right_wrist_comp</code></td></tr></tbody>
+            </table></div>
+            <p>服务受理后返回 <code>202</code>、任务 <code>id</code> 和初始状态 <code>queued</code>。</p>
+          </div>
+        </details>
+        <details><summary><code class="verb post">POST</code><code class="path">/api/metrics/{metric_id}/jobs</code><span class="api-name">按指标提交</span></summary><div class="api-body">指定 <code>ms_ssim</code> 时使用相同的六个文件字段。向预留指标提交任务，服务返回 <code>501</code>。</div></details>
+        <details><summary><code class="verb">GET</code><code class="path">/api/jobs/{job_id}</code><span class="api-name">查询状态与结果</span></summary><div class="api-body">使用提交时返回的任务标识查询。状态依次为 <code>queued</code>、<code>running</code>，成功后变为 <code>completed</code>。<code>result.views</code> 给出各视角的帧数、均值、中位数及第 95 百分位，<code>result.mean</code> 是各视角均值的算术平均。任务失败时读取 <code>failed</code> 状态下的 <code>error</code>。</div></details>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap"><span>机器人视觉评测</span><a href="#main">返回顶部 ↑</a></div></footer>
+</body>
+</html>
