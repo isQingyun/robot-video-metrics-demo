@@ -34,9 +34,9 @@ button:disabled { cursor: not-allowed; }
 .brandmark { width: 30px; height: 30px; display: flex; align-items: end; justify-content: center; gap: 2px; padding: 6px; border-radius: 7px; background: var(--blue); }
 .brandmark i { width: 4px; background: var(--white); border-radius: 1px; }
 .brandmark i:first-child { height: 9px; }.brandmark i:nth-child(2) { height: 16px; }.brandmark i:last-child { height: 12px; }
-nav { display: flex; align-items: center; gap: 26px; font-size: .875rem; }
-nav a { color: var(--muted); padding: 8px 0; text-decoration: none; }
-nav a:hover { color: var(--blue); }
+.topbar nav { display: flex; align-items: center; gap: 26px; font-size: .875rem; }
+.topbar nav a { color: var(--muted); padding: 8px 0; text-decoration: none; }
+.topbar nav a:hover { color: var(--blue); }
 .host { margin-left: auto; display: flex; align-items: center; gap: 8px; color: var(--muted); font: .82rem/1.5 "IBM Plex Mono", Consolas, monospace; }
 .host-symbol { width: 14px; height: 12px; border: 1.5px solid currentColor; border-radius: 2px; position: relative; }
 .host-symbol::after { content: ""; position: absolute; bottom: 2px; left: 2px; width: 3px; height: 1px; background: currentColor; }
@@ -101,6 +101,13 @@ th:first-child,td:first-child { text-align: left; }
 .catalog { margin-top: 32px; }
 .catalog-header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 13px; }
 .catalog-header h2 { font-size: 1.35rem; }
+.catalog-nav { display: flex; flex-wrap: wrap; gap: 7px; }
+.catalog-nav a { padding: 5px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--white); color: var(--blue-dark); font-size: .86rem; text-decoration: none; }
+.catalog-nav a:hover, .catalog-nav a:focus-visible { border-color: var(--blue); background: var(--blue-wash); }
+.metric-category { margin-top: 22px; scroll-margin-top: 18px; }
+.category-heading { display: flex; align-items: baseline; gap: 9px; margin-bottom: 7px; }
+.category-heading h3 { margin: 0; font-size: 1.04rem; }
+.category-count { color: var(--muted); font-size: .8rem; }
 .metric-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 23px; }
 .metric-item { border-top: 1px solid var(--line); min-width: 0; }
 .metric-item summary { display: flex; align-items: center; gap: 12px; list-style: none; padding: 11px 1px; }
@@ -111,7 +118,9 @@ th:first-child,td:first-child { text-align: left; }
 .availability { margin-left: auto; white-space: nowrap; font-size: .77rem; color: var(--muted); }
 .availability.ready { color: var(--blue); font-weight: 600; }
 .metric-detail { padding: 0 20px 12px 1px; color: var(--muted); font-size: .85rem; overflow-wrap: anywhere; }
-.metric-detail p + p { margin-top: 5px; }
+.metric-facts { display: grid; grid-template-columns: max-content minmax(0,1fr); gap: 3px 12px; margin: 8px 0 0; }
+.metric-facts dt { font-weight: 600; }
+.metric-facts dd { margin: 0; }
 @media (max-width: 960px) {
   .topbar-inner, .page { width: calc(100% - 48px); }
   .workspace { gap: 14px; grid-template-columns: minmax(0,1.35fr) minmax(0,1fr); }
@@ -128,7 +137,7 @@ th:first-child,td:first-child { text-align: left; }
 @media (max-width: 520px) {
   .page,.topbar-inner { width: calc(100% - 28px); }
   .topbar-inner { min-height: 55px; gap: 10px; }
-  nav { margin-left: auto; } nav a:first-child { display: none; } .host { display: none; }
+  .topbar nav { margin-left: auto; } .topbar nav a:first-child { display: none; } .host { display: none; }
   .intro { padding: 24px 0 19px; } .intro p { font-size: .9rem; }
   .video-matrix { padding: 8px 13px 0; }
   .view-row,.column-head { grid-template-columns: 36px repeat(2,minmax(0,1fr)); gap: 6px; }

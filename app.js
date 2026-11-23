@@ -135,28 +135,50 @@ function buildMatrix() {
   refreshControls();
 }
 
-function loadCatalog() {
-  const metrics = metricCatalog;
-  const list = document.createDocumentFragment();
-  for (const metric of metrics) {
-    const item = make("details", "metric-item");
-    const summary = make("summary");
-    const status = make("span", metric.available ? "availability ready" : "availability",
-      metric.available ? "可计算" : "接口已预留");
-    summary.append(make("span", "metric-name", metric.name), status);
-    const detail = make("div", "metric-detail");
-    detail.append(make("p", "", metric.description));
-    if (Array.isArray(metric.requires) && metric.requires.length) {
-      detail.append(make("p", "", "所需资料：" + metric.requires.join("、")));
-    }
-    detail.append(make("p", "", "接口标识：" + metric.id));
-    item.append(summary, detail);
-    list.append(item);
+function metricCategory(metric) {
+  if (metric.category) return metric.category;
+  // Older servers return only the original group.
+  if (metric.group === "全图画质") return "traditional";
+  if (metric.group === "闭环任务") return "key";
+  return "proxy";
+}
+
+function metricItem(metric) {
+  const item = make("details", "metric-item");
+  const summary = make("summary");
+  const status = make("span", metric.available ? "availability ready" : "availability",
+    metric.available ? "可计算" : "接口已预留");
+  summary.append(make("span", "metric-name", metric.name), status);
+
+  const detail = make("div", "metric-detail");
+  const facts = make("dl", "metric-facts");
+  const entries = [
+    ["判读方向", metric.direction],
+    ["用途", metric.purpose],
+    ["所需资料", metric.requires?.join("、")],
+    ["接口标识", metric.id],
+  ];
+  for (const [label, value] of entries) {
+    if (value) facts.append(make("dt", "", label), make("dd", "", value));
   }
-  element("metric-list").replaceChildren(list);
+  detail.append(make("p", "", metric.description), facts);
+  item.append(summary, detail);
+  return item;
+}
+
+function renderCatalog(metrics) {
+  for (const group of document.querySelectorAll("#metric-list [data-category]")) {
+    const members = metrics.filter(metric => metricCategory(metric) === group.dataset.category);
+    group.querySelector(".metric-list").replaceChildren(...members.map(metricItem));
+    group.querySelector(".category-count").textContent = members.length + " 项";
+  }
   const ready = metrics.filter((metric) => metric.available).length;
   element("catalog-count").textContent = ready + " 项可计算 · " + (metrics.length - ready) + " 项预留";
+  element("metric-list").hidden = false;
   showMessage("catalog-message");
+  // The live catalogue may finish loading after the browser's initial fragment jump.
+  const anchor = element(location.hash.slice(1));
+  if (anchor?.matches(".metric-category, .category-heading h3")) anchor.scrollIntoView();
 }
 
 function renderResults(result) {
@@ -245,5 +267,5 @@ element("sample-frames").addEventListener("toggle", () => {
 document.querySelector('a[href="#api"]').addEventListener("click", () => { element("api").open = true; });
 window.addEventListener("hashchange", openAnchor);
 buildMatrix();
-loadCatalog();
+renderCatalog(metricCatalog);
 openAnchor();

@@ -7,10 +7,10 @@
   <meta name="theme-color" content="#f7f8fa">
   <meta http-equiv="Content-Security-Policy" content="connect-src 'none'; form-action 'none'; object-src 'none'; base-uri 'none'">
   <title>三视角视频评测 · 机器人视觉评测</title>
-  <link rel="stylesheet" href="./styles.css?v=workbench2">
+  <link rel="stylesheet" href="./styles.css?v=catalog3">
   <link rel="stylesheet" href="./demo.css?v=workbench2">
-  <script src="./catalog.js?v=workbench2" defer></script>
-  <script src="./app.js?v=workbench2" defer></script>
+  <script src="./catalog.js?v=catalog3" defer></script>
+  <script src="./app.js?v=catalog3" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳到工作台</a>
@@ -84,14 +84,32 @@
     <section class="catalog" id="catalog" aria-labelledby="catalog-heading">
       <div class="catalog-header" id="metrics"><h2 id="catalog-heading">指标目录</h2><span id="catalog-count" class="muted"></span></div>
       <p id="catalog-message" role="status">正在读取指标目录…</p>
-      <div id="metric-list" class="metric-list"></div>
+      <div id="metric-list" hidden>
+        <nav class="catalog-nav" aria-label="指标分类">
+          <a href="#catalog-traditional">传统指标</a>
+          <a href="#catalog-proxy">代理指标</a>
+          <a href="#catalog-key">关键指标</a>
+        </nav>
+        <section id="catalog-traditional" class="metric-category" data-category="traditional" aria-labelledby="traditional-heading">
+          <div class="category-heading"><h3 id="traditional-heading">传统指标</h3><span class="category-count"></span></div>
+          <div class="metric-list"></div>
+        </section>
+        <section id="catalog-proxy" class="metric-category" data-category="proxy" aria-labelledby="proxy-heading">
+          <div class="category-heading"><h3 id="proxy-heading">代理指标</h3><span class="category-count"></span></div>
+          <div class="metric-list"></div>
+        </section>
+        <section id="catalog-key" class="metric-category" data-category="key" aria-labelledby="key-heading">
+          <div class="category-heading"><h3 id="key-heading">关键指标</h3><span class="category-count"></span></div>
+          <div class="metric-list"></div>
+        </section>
+      </div>
     </section>
     <details id="api" class="metric-item api-reference">
       <summary><span class="metric-name">计算服务接口说明</span><span class="availability">HTTP API</span></summary>
       <div class="metric-detail">
         <p>以下路径相对于计算服务，支持同一视角逐帧对应的 MP4 或 MOV。每对视频的帧数、分辨率、显示旋转角及相对时间戳须匹配，画面短边至少 161 像素。</p>
         <dl class="routes">
-          <dt><code>GET /api/metrics</code></dt><dd>获取指标目录、所需资料和可计算状态。</dd>
+          <dt><code>GET /api/metrics</code></dt><dd>获取指标分类、定义、所需资料和可计算状态。</dd>
           <dt><code>GET /api/metrics/{metric_id}</code></dt><dd>获取单项定义。例如 <code>/api/metrics/caia_loss</code>。</dd>
           <dt><code>POST /api/jobs</code></dt><dd>使用 <code>multipart/form-data</code> 提交六个文件。三个原片字段为 <code>head_clean</code>、<code>left_wrist_clean</code> 和 <code>right_wrist_clean</code>，对应的压缩片字段为 <code>head_comp</code>、<code>left_wrist_comp</code> 和 <code>right_wrist_comp</code>。默认计算 MS-SSIM；受理后返回 HTTP 202、任务 <code>id</code> 和状态 <code>queued</code>。</dd>
           <dt><code>POST /api/metrics/{metric_id}/jobs</code></dt><dd>按指标标识提交相同的配对文件。<code>ms_ssim</code> 已实现，预留指标返回 HTTP 501。</dd>
